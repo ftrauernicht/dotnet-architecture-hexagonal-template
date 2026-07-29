@@ -6,7 +6,7 @@
 
   <!-- Desktop UI — referenced by the *.Ui.Avalonia project only (enforced by an architecture test). -->
   <ItemGroup>
-    <PackageVersion Include="Avalonia" Version="12.1.0" />
+    <PackageVersion Include="Avalonia" Version="12.1.1" />
     <PackageVersion Include="Avalonia.Desktop" Version="12.1.0" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.0" />
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.0" />
