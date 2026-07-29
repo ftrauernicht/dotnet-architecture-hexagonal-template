@@ -1,5 +1,11 @@
 # .NET 10 Clean/Hexagonal Starter Template
 
+[![Build](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/build.yml/badge.svg)](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/build.yml)
+[![Tests](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/test.yml/badge.svg)](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/test.yml)
+[![Security](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/security.yml/badge.svg)](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/security.yml)
+[![Format](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/format.yml/badge.svg)](https://github.com/ftrauernicht/dotnet-architecture-hexagonal-template/actions/workflows/format.yml)
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+
 An opinionated, **ready-to-clone** starter for a .NET 10 application with a clean/hexagonal
 architecture, strict quality governance, an executable specification, and a full GitHub Actions
 CI/CD pipeline. It builds, tests and publishes out of the box.
