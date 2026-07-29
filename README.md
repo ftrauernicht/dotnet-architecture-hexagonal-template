@@ -70,6 +70,34 @@ only (`Ui → Application → Domain`, `Infrastructure.* → Application/Domain`
 has **zero package references** — enforced, not just intended.
 
 ```
+            +------------------------------------+
+            |          App.Ui.Avalonia           |
+            | composition root - Avalonia + MVVM |
+            +------------------------------------+
+                              |
+                         | depends on
+                              v
+       +----------------------------------------------+
+       |               App.Application                |
+       |              use cases + ports               |
+       | (IItemSource, IItemTarget, IMigrationLedger) |
+       +----------------------------------------------+
+                              |
+                         | depends on
+                              v
+      +-----------------------------------------------+
+      |                   App.Domain                  |
+      | BCL only - zero package references (the core) |
+      +-----------------------------------------------+
+                              ^
+                 | implements the ports above
++------------------------------------------------------------+
+|      Infrastructure.Inbound / Outbound / Persistence       |
+| adapters - implement the ports declared by App.Application |
++------------------------------------------------------------+
+```
+
+```
 App.slnx                     XML solution
 global.json                  SDK pin
 nuget.config                 package-source pin (<clear/> + mapping)
