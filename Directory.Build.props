@@ -1,0 +1,31 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Identity + versioning. <Version> here is the SINGLE source of version truth: it stamps every
+    assembly. Nerdbank.GitVersioning is used in CI as a CLI only (to label the run/artifact) and
+    deliberately NOT added as an MSBuild package, which would set Version per project and break
+    the "version is set centrally" architecture test.
+
+    Replace the placeholders: Contoso -> your org, App -> your product.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Contoso.$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>Contoso.$(MSBuildProjectName)</AssemblyName>
+    <Version>1.0.0</Version>
+    <Company>Contoso</Company>
+    <Product>App</Product>
+    <Authors>Contoso</Authors>
+  </PropertyGroup>
+</Project>

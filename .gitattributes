@@ -1,0 +1,28 @@
+# Line endings and diff behaviour, so neither depends on a developer's local Git settings.
+#
+# Without this file the result of a checkout is governed by each machine's core.autocrlf.
+# Two developers then commit the same file with different line endings, and a diff that
+# should be one line becomes the whole file.
+
+# Text files are stored with LF in the repository and checked out with the platform's
+# native line ending.
+* text=auto
+
+# C# gets language-aware hunk headers: a diff shows the member it lands in.
+*.cs text diff=csharp
+
+# Scripts whose line endings the interpreter cares about, regardless of platform.
+*.sh   text eol=lf
+*.ps1  text eol=crlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# Binary — never line-ended, never diffed as text.
+*.zip  binary
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.dll  binary
+*.exe  binary
+*.pdb  binary
+*.snk  binary

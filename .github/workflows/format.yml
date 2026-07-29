@@ -1,0 +1,37 @@
+name: Format
+
+on:
+  # Manual trigger for on-demand pipeline testing (Actions -> Run workflow).
+  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    name: dotnet format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore App.slnx
+
+      - name: dotnet format --verify-no-changes
+        # Fails (non-zero exit) when any file is not formatted per .editorconfig. This complements
+        # the in-build EnforceCodeStyleInBuild=true (which already fails build.yml on
+        # analyzer-visible style violations) by also catching whitespace / final-newline fixes.
+        # --severity warn (NOT info): the format gate must match the team's enforced bar. The
+        # build already fails on warnings, so info-level analyzer SUGGESTIONS are not violations
+        # and must not block a PR — gating on them would be stricter than the build.
+        run: dotnet format App.slnx --verify-no-changes --severity warn

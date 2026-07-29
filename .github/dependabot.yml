@@ -1,0 +1,26 @@
+version: 2
+
+updates:
+  # NuGet packages. Central Package Management is on (ManagePackageVersionsCentrally=true in
+  # Directory.Packages.props). The repository is flat — that file, the .slnx, src/ and tests/
+  # all sit at the root, so the root is what Dependabot scans.
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "build"
+      include: "scope"
+
+  # GitHub Actions used by the workflows in this repo (checkout, setup-dotnet, upload-artifact,
+  # test-reporter, trivy-action, etc.) — keeps the CI supply chain itself patched, and bumps the
+  # SHA pins in the workflow files.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "build"
+      include: "scope"

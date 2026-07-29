@@ -1,0 +1,111 @@
+# Ignore rules for the repository. The first section is the one that matters most:
+# it keeps sensitive data and secrets out of the history. The rest is build- and
+# tooling-generated output.
+
+# === Sensitive data, secrets and run output — MUST NEVER BE COMMITTED ==========
+# Local databases / snapshots may contain personal data (GDPR). Adjust to your domain.
+*.fdb
+*.fbk
+*.gbk
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Local secrets and connection strings.
+appsettings.*.local.json
+secrets.json
+*.secrets.json
+*.pfx
+*.env
+
+# Export/output packages may carry data. Committed test fixtures are the one exception.
+output/
+*.zip
+!**/tests/**/Fixtures/**/*.zip
+
+# Run logs may name real people and records.
+*.log
+[Ll]og/
+[Ll]ogs/
+
+# === Build output ==============================================================
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+artifacts/
+*.binlog
+
+# === Visual Studio =============================================================
+.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.userprefs
+*.sln.docstates
+
+# === JetBrains Rider / ReSharper ===============================================
+.idea/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# === Visual Studio Code (shared workspace config stays versioned) ==============
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# === Test results and coverage =================================================
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Verify snapshots: *.verified.* is committed on purpose, *.received.* is the
+# output of a failing run and must never be.
+*.received.*
+
+# === Reqnroll ==================================================================
+# Generated code-behind of the .feature files; the .feature file is the source.
+*.feature.cs
+
+# === BenchmarkDotNet ===========================================================
+BenchmarkDotNet.Artifacts/
+
+# === NuGet =====================================================================
+*.nupkg
+*.snupkg
+[Pp]ackages/
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+
+# === Publish and packaging =====================================================
+publish/
+*.pubxml
+*.publishproj
+PublishScripts/
+*.appx
+*.appxbundle
+*.msix
+
+# === Native / debug intermediates ==============================================
+*.pdb
+*.ilk
+*.pch
+*.tlog
+*.tmp
+*.tmp_proj
+
+# === OS cruft ==================================================================
+.DS_Store
+Thumbs.db
+desktop.ini

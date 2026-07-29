@@ -1,0 +1,82 @@
+name: Security
+
+# Defense-in-depth: .gitignore already excludes sensitive data and secrets, but these gates
+# catch what slips through (including in history) and known-vulnerable dependencies, on every
+# PR and push to main.
+
+on:
+  # Manual trigger for on-demand pipeline testing (Actions -> Run workflow).
+  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Least privilege. security-events: write is NOT granted because the optional SARIF upload
+# steps mentioned in comments below are not enabled by default.
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        # fetch-depth: 0 so historical secrets (not just the current tree) are scanned.
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        # Uses the gitleaks CLI directly (upstream GitHub release) rather than
+        # gitleaks/gitleaks-action@v2, to avoid that action's dependency on a GITLEAKS_LICENSE
+        # org secret. Pinned to a fixed version AND verified against the official SHA256 before
+        # it is unpacked or run — supply-chain integrity for a security gate.
+        # On GHE, confirm outbound access to github.com releases is allowed, or mirror the
+        # binary internally (see docs/ci/ghe-allowlist.md).
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+          # SHA256 of gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz from the official release
+          # checksums. Bump together with GITLEAKS_VERSION (manual pin, not Dependabot-managed).
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          curl -sSfL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          chmod +x gitleaks
+
+      - name: Run gitleaks (secret scan)
+        # A detected secret exits non-zero and fails this job. --redact keeps the actual secret
+        # value out of the logs.
+        run: ./gitleaks detect --source . --redact --exit-code 1
+
+  trivy:
+    name: Vulnerability scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+
+      - name: Setup .NET
+        # Needed only so the next step can generate NuGet lock files for Trivy to read.
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Generate NuGet lock files (so Trivy sees .NET dependencies)
+        # Without a packages.lock.json, `trivy fs` finds NO NuGet dependencies and the vuln gate
+        # is a silent no-op. RestorePackagesWithLockFile=true writes src/**/packages.lock.json
+        # with the resolved versions Trivy scans. These lock files are CI-only scan input.
+        run: dotnet restore App.slnx -p:RestorePackagesWithLockFile=true
+
+      - name: Run Trivy (filesystem scan)
+        # A fresh CRITICAL/HIGH finding (exit-code: 1) fails this job. ignore-unfixed: true avoids
+        # failing on vulnerabilities with no available fix yet.
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2  # v0.28.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
+          ignore-unfixed: true

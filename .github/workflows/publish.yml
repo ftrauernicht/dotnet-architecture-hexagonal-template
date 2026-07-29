@@ -1,0 +1,68 @@
+name: Publish
+
+# Runs on pull_request too, so the single-file executable is available as a downloadable
+# artifact for direct testing before merge. Also runs on push to main and on-demand via
+# workflow_dispatch.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish single-exe
+    # The Avalonia UI project is OutputType=WinExe (Windows desktop), so the single-file publish
+    # must run on a Windows runner.
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        # fetch-depth: 0 is required so nbgv can compute the git-height version component.
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Install nbgv
+        run: dotnet tool install --global nbgv --version 3.6.146
+
+      - name: Capture version
+        # Captures the Nerdbank.GitVersioning SemVer so the uploaded artifact name is traceable
+        # back to an exact commit. This labels the ARTIFACT only — the assemblies inside carry
+        # <Version> from Directory.Build.props, which holds version authority.
+        run: |
+          $version = nbgv get-version -v SemVer2
+          echo "AB_VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Publish (win-x64, framework-dependent, single file)
+        # Framework-dependent single-file: the .NET runtime is NOT embedded, so the executable
+        # stays small (~30 MB; the operator machine needs the matching .NET Desktop Runtime).
+        # IncludeNativeLibrariesForSelfExtract still bundles Avalonia's native libraries, so the
+        # result is one executable rather than an exe plus loose native DLLs.
+        # NB: use -p:SelfContained=false — `--self-contained false` is mis-parsed here as a bare
+        # flag and would embed the whole runtime again (~99 MB).
+        run: dotnet publish src/App.Ui.Avalonia -c Release -r win-x64 -p:SelfContained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish/win-x64
+
+      - name: Drop debug symbols from the artifact
+        # The Avalonia native packages ship large .pdb files (libSkiaSharp.pdb ~80 MB,
+        # libHarfBuzzSharp.pdb ~20 MB) that are not needed to run or test the tool. Removing them
+        # keeps the uploaded artifact at the ~30 MB executable instead of ~130 MB of symbols.
+        shell: pwsh
+        run: Get-ChildItem publish/win-x64 -Recurse -Filter *.pdb | Remove-Item -Force
+
+      - name: Upload single-exe artifact
+        # Build output is uploaded as a CI artifact only and is NEVER committed to the repo.
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: App-${{ env.AB_VERSION || github.run_id }}-win-x64
+          path: publish/win-x64/**
+          retention-days: 30

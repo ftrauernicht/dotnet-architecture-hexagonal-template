@@ -1,0 +1,16 @@
+# CODEOWNERS — enforces review from the listed owners on every PR to main.
+#
+# Replace the placeholder handles with your real GitHub (or GHE) usernames / teams. GitHub does
+# NOT count a PR author's own review, so keep at least two owners: the author is then always
+# reviewed by one of the others.
+#
+# Enforcement requires branch protection to have "Require review from Code Owners" enabled
+# (see docs/ci/branch-protection.md) — this file alone does not block merges.
+
+* @your-handle @your-teammate
+
+# Narrower ownership for CI/CD, architecture and process docs — kept explicit so these areas can
+# be handed to a different owner later without touching the default rule.
+/.github/ @your-handle @your-teammate
+/docs/ci/ @your-handle @your-teammate
+/docs/adr/ @your-handle @your-teammate

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\App.Domain\App.Domain.csproj" />
+    <ProjectReference Include="..\..\src\App.Application\App.Application.csproj" />
+    <ProjectReference Include="..\..\src\App.Infrastructure.Inbound\App.Infrastructure.Inbound.csproj" />
+    <ProjectReference Include="..\..\src\App.Infrastructure.Outbound\App.Infrastructure.Outbound.csproj" />
+    <ProjectReference Include="..\..\src\App.Infrastructure.Persistence\App.Infrastructure.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
