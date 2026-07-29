@@ -33,7 +33,7 @@ jobs:
           global-json-file: global.json
 
       - name: Install nbgv
-        run: dotnet tool install --global nbgv --version 3.6.146
+        run: dotnet tool install --global nbgv --version 3.10.91
 
       - name: Capture version
         # Captures the Nerdbank.GitVersioning SemVer so the uploaded artifact name is traceable

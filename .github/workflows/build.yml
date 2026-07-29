@@ -38,7 +38,7 @@ jobs:
         # NOT stamp assemblies. Version authority belongs to <Version> in Directory.Build.props.
         # Adding the Nerdbank.GitVersioning MSBuild package would set Version per project and
         # break App.Architecture.Tests. Do not add it.
-        run: dotnet tool install --global nbgv --version 3.6.146
+        run: dotnet tool install --global nbgv --version 3.10.91
 
       - name: Stamp version (nbgv cloud)
         run: nbgv cloud
