@@ -40,12 +40,12 @@ jobs:
         run: dotnet build App.slnx -c Release --no-restore
 
       - name: Test (unit + architecture + Reqnroll specs)
-        # A single `dotnet test` over the .slnx runs every xUnit v3 test project, including
+        # A single `dotnet test --solution` over the .slnx runs every xUnit v3 test project, including
         # App.Architecture.Tests and the Reqnroll specs (they execute as ordinary xUnit v3 tests).
         # No `if: always()` here: with --no-build this step must NOT run when the build failed
         # (it would only fail again on missing outputs — noise, no signal). The report and upload
         # steps below keep always() so results are still published when tests fail.
-        run: dotnet test App.slnx -c Release --no-build --logger trx --results-directory TestResults
+        run: dotnet test --solution App.slnx -c Release --no-build --report-xunit-trx --results-directory TestResults
 
       - name: Publish test report
         # Fallback if this action is not available (e.g. not allowlisted on GHE): rely solely on
@@ -111,7 +111,7 @@ jobs:
         # Wraps the whole `dotnet test` run out-of-process and merges coverage across all test
         # projects into a single cobertura report, without adding a collector package.
         run: |
-          dotnet-coverage collect -f cobertura -o coverage/coverage.cobertura.xml "dotnet test App.slnx -c Release --no-build"
+          dotnet-coverage collect -f cobertura -o coverage/coverage.cobertura.xml "dotnet test --solution App.slnx -c Release --no-build"
 
       - name: Diff coverage gate (>=80% on new/changed lines)
         # PR-SCOPED: diff-cover only scores the lines this PR changed vs the main merge-base
