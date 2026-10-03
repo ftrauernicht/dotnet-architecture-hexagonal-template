@@ -23,7 +23,7 @@ Requires the **.NET 10 SDK** (pinned in `global.json`). Run from the repository 
 
 ```bash
 dotnet build App.slnx -c Release        # build everything (green build == style gate)
-dotnet test  App.slnx -c Release        # unit tests + Gherkin specs + architecture tests
+dotnet test --solution App.slnx -c Release        # unit tests + Gherkin specs + architecture tests
 dotnet run --project src/App.Ui.Avalonia
 ```
 

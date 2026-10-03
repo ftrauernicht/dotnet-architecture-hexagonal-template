@@ -54,7 +54,7 @@ Everything here is deliberately generic. Replace the two placeholders and start 
 ```bash
 dotnet restore App.slnx
 dotnet build   App.slnx -c Release          # green build == style gate (warnings are errors)
-dotnet test    App.slnx -c Release          # unit + architecture + Reqnroll specs
+dotnet test --solution App.slnx -c Release          # unit + architecture + Reqnroll specs
 dotnet run --project src/App.Ui.Avalonia    # start the desktop app
 dotnet format  App.slnx --verify-no-changes --severity warn   # what the format gate checks
 ```
@@ -170,7 +170,7 @@ re-embed the whole runtime (~99 MB).
 2. Find-and-replace `Contoso` → your org and `App` → your product (file names *and* contents),
    including the `.slnx`, the project folders/files, and namespaces.
 3. Set real handles in `.github/CODEOWNERS`.
-4. `dotnet restore && dotnet build && dotnet test` — confirm green.
+4. `dotnet restore && dotnet build && dotnet test --solution App.slnx` — confirm green.
 5. Replace the sample domain (`Item`, the ports, the in-memory adapters, the feature file) with
    your own; keep the architecture tests pointed at your domain/application types.
 6. Push to your host. If it is GitHub Enterprise, work through
