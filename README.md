@@ -196,5 +196,5 @@ re-embed the whole runtime (~99 MB).
 
 ## License
 
-Add your own. This template ships without a license file on purpose — choose one before you
-publish.
+MIT, see [LICENSE](LICENSE). For a project you start from this template, replace the file with the
+license you want.
