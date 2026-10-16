@@ -13,3 +13,4 @@ Feature: Import items
     When the import runs
     And the import runs again
     Then 0 items are written on the second run
+    And 2 items are skipped as unchanged on the second run

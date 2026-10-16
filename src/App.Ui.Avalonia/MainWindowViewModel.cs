@@ -7,7 +7,7 @@ namespace Contoso.App.Ui.Avalonia;
 /// <summary>
 /// Demonstrates MVVM with CommunityToolkit source generators: <c>[ObservableProperty]</c> turns
 /// the <c>_status</c> field into an observable <c>Status</c> property. On construction it runs the
-/// import use case once and reports the result.
+/// import use case once and reports what the run did.
 /// </summary>
 public sealed partial class MainWindowViewModel : ObservableObject
 {
@@ -16,7 +16,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel(ImportItemsUseCase importItems)
     {
-        var written = importItems.Execute();
-        _status = $"Imported {written} item(s).";
+        var summary = importItems.Execute();
+        _status = $"Read {summary.Read} item(s): {summary.Written} written, "
+            + $"{summary.SkippedAsUnchanged} already up to date.";
     }
 }

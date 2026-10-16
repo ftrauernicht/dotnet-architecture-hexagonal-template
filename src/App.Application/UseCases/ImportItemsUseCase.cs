@@ -8,16 +8,18 @@ namespace Contoso.App.Application.UseCases;
 /// </summary>
 public sealed class ImportItemsUseCase(IItemSource source, IItemTarget target, IMigrationLedger ledger)
 {
-    /// <summary>Runs the import and returns the number of items actually written.</summary>
-    public int Execute()
+    /// <summary>Runs the import and reports what it wrote and what it left alone.</summary>
+    public ImportSummary Execute()
     {
         var written = 0;
+        var skipped = 0;
 
         foreach (var item in source.Read())
         {
             var contentHash = $"{item.ExternalId}:{item.Name}";
             if (ledger.AlreadyProcessed(item.ExternalId, contentHash))
             {
+                skipped++;
                 continue;
             }
 
@@ -26,6 +28,6 @@ public sealed class ImportItemsUseCase(IItemSource source, IItemTarget target, I
             written++;
         }
 
-        return written;
+        return new ImportSummary(written, skipped);
     }
 }
