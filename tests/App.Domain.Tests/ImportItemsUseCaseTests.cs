@@ -12,7 +12,7 @@ public sealed class ImportItemsUseCaseTests
     {
         var useCase = new ImportItemsUseCase(new SampleItemSource(), new InMemoryItemTarget(), new InMemoryLedger());
 
-        Assert.Equal(2, useCase.Execute());
+        Assert.Equal(new ImportSummary(Written: 2, SkippedAsUnchanged: 0), useCase.Execute());
     }
 
     [Fact]
@@ -23,6 +23,10 @@ public sealed class ImportItemsUseCaseTests
 
         useCase.Execute();
 
-        Assert.Equal(0, useCase.Execute());
+        var second = useCase.Execute();
+
+        Assert.Equal(0, second.Written);
+        Assert.Equal(2, second.SkippedAsUnchanged);
+        Assert.Equal(2, second.Read);
     }
 }

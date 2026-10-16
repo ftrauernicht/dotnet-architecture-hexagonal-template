@@ -129,6 +129,10 @@ Assembly and namespace names carry the company prefix: project `App.Domain` prod
 
 ## What makes this template opinionated
 
+Opinions are cheap in a README. [What one feature costs](docs/adding-a-feature.md) walks through
+a real change to this repository file by file, including the parts the structure does not pay
+for, and says when a simpler layout would be the better trade.
+
 ### Architecture enforced by tests, not convention
 `App.Architecture.Tests` fails the build if the domain gains an outward dependency, if the
 application references infrastructure/UI, or if a shared quality gate (warnings-as-errors,
@@ -176,7 +180,8 @@ re-embed the whole runtime (~99 MB).
 6. Push to your host. If it is GitHub Enterprise, work through
    [`docs/ci/ghe-allowlist.md`](docs/ci/ghe-allowlist.md), then enable the required checks in
    [`docs/ci/branch-protection.md`](docs/ci/branch-protection.md).
-7. Record your first real decisions as ADRs (see [`docs/adr/README.md`](docs/adr/README.md)).
+7. Record your first real decisions as ADRs (see [`docs/adr/README.md`](docs/adr/README.md));
+   ADR-0001 to ADR-0004 are the ones this template made about itself.
 
 ---
 
