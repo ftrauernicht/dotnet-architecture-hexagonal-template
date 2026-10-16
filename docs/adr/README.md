@@ -19,13 +19,16 @@ later the *why* is still on record, not just the *what*.
 | ADR | Decision | Status |
 |---|---|---|
 | [0001](0001-record-architecture-decisions.md) | Record architecture decisions | Accepted |
+| [0002](0002-enforce-the-dependency-rule-with-tests.md) | Enforce the Dependency Rule with tests, not convention | Accepted |
+| [0003](0003-pin-what-the-build-depends-on.md) | Pin what the build depends on | Accepted |
+| [0004](0004-pin-actions-to-commit-shas.md) | Pin GitHub Actions to commit SHAs | Accepted |
 
 ## Suggested first decisions to record for a new project
 
-The template ships one ADR (0001). When you adopt it, record your own versions of the decisions
-the template embodies, so they are on the record for your team:
+The template records the decisions it makes about itself (0001 to 0004). When you adopt it,
+record your own versions of the decisions it leaves to you, so they are on the record for your
+team:
 
-- Clean/hexagonal architecture with ports and adapters, Dependency Rule enforced by tests.
 - Target framework and solution format (`.slnx`).
 - UI stack (Avalonia + MVVM) — or your replacement.
 - Central Package Management and the pinned SDK / NuGet sources.
