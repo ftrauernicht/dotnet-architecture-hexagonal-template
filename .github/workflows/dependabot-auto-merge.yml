@@ -11,6 +11,11 @@ name: Dependabot auto-merge
 
 on:
   workflow_run:
+    # This list is not optional. Leaving it out makes the file invalid, and an invalid
+    # workflow fails quietly: Actions shows the file path instead of the name above and
+    # never fires the trigger at all. Every workflow that runs on a pull request belongs
+    # here; the step below is what decides whether all of them are actually done.
+    workflows: [Build, Format, Publish, Security, Tests]
     types: [completed]
 
 # Least privilege: merging a pull request needs these two and nothing else.
